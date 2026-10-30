@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Answer Cut Lab — keep the facts, shorten the answer</title>
+<link rel="stylesheet" href="styles.css">
+<script src="core.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<header class="shell">
+  <p class="eyebrow">ANSWER CUT LAB · OFFLINE PRACTICE</p>
+  <h1>Make a shorter answer<br>you can still explain.</h1>
+  <p class="intro">Keep your original. Edit a concise version. Save the useful detail for the next question.</p>
+  <p class="privacy">Your words stay in this tab. Nothing is uploaded or saved automatically. Export a file before closing.</p>
+  <div class="toolbar">
+    <button id="loadExample" type="button">Try a fictional example</button>
+    <button id="importButton" type="button">Open practice file</button>
+    <input id="importFile" type="file" accept=".json,application/json" hidden>
+    <button id="clear" class="quiet" type="button">Clear draft</button>
+  </div>
+</header>
+<main class="shell">
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+  <label class="field question">The question you are answering
+    <input id="question" maxlength="500" placeholder="For example: Tell me about a time you improved a process.">
+  </label>
+  <label class="example-label"><input id="fictional" type="checkbox"> This is a fictional practice example, not my personal experience.</label>
+  <section class="editors" aria-label="Answer editing">
+    <div class="panel">
+      <div class="step">1 · KEEP THE FULL STORY</div>
+      <h2><label for="source">Original answer</label></h2>
+      <p id="sourceHelp">Paste your own rough transcript or write a first attempt. Remove confidential names and details.</p>
+      <textarea id="source" maxlength="20000" aria-describedby="sourceHelp" placeholder="What happened, what did you actually do, and what do you know about the result?"></textarea>
+      <p class="metric"><strong id="sourceWords">0</strong> words in the original</p>
+      <button id="startCut" type="button">Start a shorter copy</button>
+    </div>
+    <div class="panel active">
+      <div class="step">2 · EDIT FOR THE QUESTION</div>
+      <h2><label for="cut">Shorter answer</label></h2>
+      <p id="cutHelp">Keep brief context, your action, and a result or honest limit. You do the editing; no answer is generated.</p>
+      <textarea id="cut" maxlength="20000" aria-describedby="cutHelp" placeholder="Keep the part that answers this question. Leave room for a follow-up."></textarea>
+      <p class="metric"><strong id="cutWords">0</strong> words · about <strong id="duration">0</strong> seconds at your chosen pace</p>
+      <div class="toolbar">
+        <button id="park" type="button">Move selected text to follow-ups</button>
+        <button id="copy" type="button">Copy shorter answer</button>
+      </div>
+      <div id="copyFallback" hidden>
+        <label for="copyText">Clipboard unavailable — select and copy this text</label>
+        <textarea id="copyText" readonly></textarea>
+      </div>
+    </div>
+  </section>
+  <section class="review-grid" aria-label="Review the edit">
+    <div class="panel">
+      <div class="step">3 · KEEP WHAT YOU MAY NEED NEXT</div>
+      <h2><label for="followups">Details for follow-ups</label></h2>
+      <p>Park an explanation, alternative or limitation here. Keep it available without making the first answer carry everything.</p>
+      <textarea id="followups" maxlength="20000" placeholder="What would you add if asked “How do you know?” or “What did you do personally?”"></textarea>
+      <details>
+        <summary>Prompts for a truthful STAR answer</summary>
+        <ul>
+          <li><strong>Situation:</strong> What does the listener need to understand the problem?</li>
+          <li><strong>Task:</strong> What were you responsible for, and what belonged to someone else?</li>
+          <li><strong>Action:</strong> What did you actually do? Explain one useful decision.</li>
+          <li><strong>Result:</strong> What did you observe? Keep estimates, reported feedback and unknowns distinct.</li>
+        </ul>
+        <p>You do not need a success story for every question. Study, volunteering and unfinished work can provide real examples.</p>
+      </details>
+    </div>
+    <div class="panel">
+      <h2>An editing budget, not a score</h2>
+      <div class="budget">
+        <label>Target length
+          <select id="seconds"><option value="30">30 seconds</option><option value="60" selected>60 seconds</option><option value="90">90 seconds</option><option value="120">120 seconds</option></select>
+        </label>
+        <label>Assumed words per minute
+          <input id="pace" type="number" min="60" max="220" step="1" value="130">
+        </label>
+      </div>
+      <p id="budgetText">At this pace, 60 seconds is roughly 130 words.</p>
+      <p class="small">Word counts and duration are approximate. Pauses, pronunciation and actual speaking speed are not measured. Rehearse aloud and time yourself.</p>
+      <h3>Numeric changes to review</h3>
+      <p id="numberIntro">Add an original answer before comparing numeric strings.</p>
+      <ul id="numberFlags" class="flags"></ul>
+      <p class="small">Only digit-written tokens are compared, exactly as written. Changed units, ownership, causality and spelled-out numbers can pass unnoticed. A flag is a question, not proof of an error.</p>
+      <fieldset>
+        <legend>My manual review</legend>
+        <label><input type="checkbox" data-check="ownership"> I distinguished my contribution from team work.</label>
+        <label><input type="checkbox" data-check="numbers"> I checked numbers and causal claims against what I know.</label>
+        <label><input type="checkbox" data-check="limits"> I kept uncertainty and missing evidence visible.</label>
+        <label><input type="checkbox" data-check="followup"> I can explain the details saved for follow-ups.</label>
+      </fieldset>
+    </div>
+  </section>
+  <section class="save panel" aria-labelledby="saveHeading">
+    <div><h2 id="saveHeading">Keep your practice</h2><p>A practice file can be reopened here. A Markdown note is readable in a text editor.</p></div>
+    <div class="toolbar"><button id="saveJson" class="primary" type="button">Save practice file</button><button id="saveMarkdown" type="button">Export Markdown</button></div>
+  </section>
+</main>
+<footer class="shell">
+  <p>Optional online reading: <a href="https://makeinterview.com/en/blog/job-interview-in-english" target="_blank" rel="noopener noreferrer">Guide to answering in English</a>.</p>
+  <p class="small">Made by the MakeInterview team. This local editor uses no AI and works independently of the separate voice-interview service, which is currently paused. It does not verify facts, assess language proficiency or predict hiring outcomes.</p>
+</footer>
+</body>
+</html>
+
